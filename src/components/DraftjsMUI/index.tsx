@@ -17,11 +17,11 @@ type Props = {
 const DraftjsMUI = (props: Props) => {
   const { editorState, onChange } = props
 
-  const editor = useRef<Editor>(null);
+  const editor = useRef<Editor>(null)
 
   const focusEditor = React.useCallback(() => {
     if (editor.current) {
-      editor.current.focus();
+      editor.current.focus()
     }
   }, [editor]);
 
@@ -39,7 +39,7 @@ const DraftjsMUI = (props: Props) => {
       e.preventDefault()
     }
 
-    const otherItems = groupStyles.filter(style => style !== toggledStyle)
+    const otherStyles = groupStyles.filter(style => style !== toggledStyle)
 
     const selection = editorState.getSelection()
 
@@ -48,7 +48,7 @@ const DraftjsMUI = (props: Props) => {
 
     if (selection.isCollapsed()) {
       // remove other items style
-      const nextStyle = otherItems.reduce((styles, style) =>
+      const nextStyle = otherStyles.reduce((styles, style) =>
         styles.has(style) ? styles.remove(style) : styles
         , nextEditorState.getCurrentInlineStyle())
 
@@ -62,10 +62,10 @@ const DraftjsMUI = (props: Props) => {
     // if selection is there
 
     // Let's just allow one color/fontSize at a time. Turn off other active colors/fontSize.
-    const nextContentState = otherItems
-      .reduce((contentState, name) => {
-        return Modifier.removeInlineStyle(contentState, selection, name)
-      }, nextEditorState.getCurrentContent())
+    const nextContentState = otherStyles
+      .reduce((contentState, style) =>
+        Modifier.removeInlineStyle(contentState, selection, style)
+      , nextEditorState.getCurrentContent())
 
     onChange(EditorState.push(
       nextEditorState,
